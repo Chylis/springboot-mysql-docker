@@ -1,8 +1,8 @@
 ## Prerequisites:
 * JDK 1.8
-* MySQL
 * Gradle
-* (Optional) Docker (and docker-machine + virtualbox if not running on Linux)
+* MySQL (if running locally)
+* *Optional* docker and docker-compose (and docker-machine + virtualbox if not running on Linux)
 
 ## 1) Local Setup
 ### Export variables used in SpringBoot's application.properties file
@@ -53,22 +53,25 @@ cd docker && docker-compose up
 ## 5) Testing the API using CURL:
 
 ### 1) Acquire ip by running "docker-machine ip default" if using docker, else use "localhost"
+```
+SPRINGBOOT_IP=<ENTER_IP_HERE>
+```
 
 ### 2) Create a sentence
 ```
-curl -v -X POST -H "Content-Type: application/json" -d '{"sentence":"The red fox crosses the ice, intent on none of my business."}' localhost:8080/api/sentence
+curl -v -X POST -H "Content-Type: application/json" -d '{"sentence":"The red fox crosses the ice, intent on none of my business."}' $SPRINGBOOT_IP:8080/api/sentence
 ```
 
 ### 3) List sentences
 ```
-curl -v -X GET localhost:8080/api/sentence/list
+curl -v -X GET $SPRINGBOOT_IP:8080/api/sentence/list
 ```
 
 ### 4) Delete a sentence
 ```
-curl -v -X DELETE localhost:8080/api/sentence?externalId="<EXTERNAL_ID>"
+curl -v -X DELETE $SPRINGBOOT_IP:8080/api/sentence?externalId="<EXTERNAL_ID>"
 ```
-    
+
     
 ## 6) Misc
 * If you for some reason change the database username/password and getting an access denied exception from Springboot  you'll probably need to remove the docker volume by running
