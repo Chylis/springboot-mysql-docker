@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+//The BootJar and BootWar tasks are subclasses of Gradle’s Jar and War tasks respectively.
+//A custom Jar task that produces a Spring Boot executable jar.
+bootJar {
+    baseName = 'mag-spring-boot' //Name of the archive created by the task
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('mysql:mysql-connector-java')
+
+    testCompile('com.h2database:h2')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}

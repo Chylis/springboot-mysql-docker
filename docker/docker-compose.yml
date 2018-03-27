@@ -1,0 +1,43 @@
+# Environment variables must be available prior to running 'docker-compose up'
+
+version: '3'
+
+services:
+  springapp:
+    container_name: "springboot"
+    build:
+      context: ./springapp
+      dockerfile: Dockerfile
+      args:
+        JAR_FILE: app.jar
+    ports:
+      - "8080:8080"
+    networks:
+      - network1
+    depends_on:
+      - mysqldb
+    environment: # Inject the properties read from the 'application.properties' file
+      DB_HOST: mysqldb
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+  mysqldb:
+    container_name: "mysqldb"
+    image: mysql:latest
+    volumes:
+      # mounts the named volume 'mysql-data' from the underlying host system (the docker-machine host if running MacOS) 
+      # as '/var/lib/mysql' inside the container, where MySQL by default will write its data files
+      - mysql-data:/var/lib/mysql
+    networks:
+      - network1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}     # The name of a database to be created on image startup
+      MYSQL_USER: ${DB_USERNAME}     # This user will be granted superuser permissions for the database specified by the MYSQL_DATABASE
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+networks:
+  network1:
+    driver: bridge
+volumes:
+  mysql-data:
